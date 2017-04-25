@@ -3,6 +3,7 @@ class StickyNote {
 	// Initialize the object property with noteForm
 	constructor(){
 		this.noteContainer = document.querySelector("#newNote");
+		this.allnotes = document.querySelector("#notes-section-title");
 		this.noteTemplate = `  <div>
 			        <div class="mdl-card__title mdl-color--blue-grey-200">
 			          <h2 class="mdl-card__title-text">Add new note</h2>
@@ -22,15 +23,18 @@ class StickyNote {
 
 		//Attach Class and add element to window
 		this.noteContainer.classList.add(...this.newNoteClassList)
+		this.allnotes.classList.add(...this.newNoteClassList)
 		this.noteContainer.innerHTML = this.noteTemplate;
 		this.userNote = document.querySelector("#userNote");
 		this.saveButton = document.querySelector("#saveNote");
+		this.date = (new Date()).toString().split(' ').splice(1,3).join(' ');
 	}
 
 	//Initialize elements with listeners
 	init(){
 		this.userNote.addEventListener('keyup', this.toggleSaveButton.bind(this), true);
 		this.saveButton.addEventListener("click", this.createNote.bind(this), true);
+	
 	}
 
 	//Disable or Enable Add button based on user input
@@ -44,25 +48,40 @@ class StickyNote {
 	}
 
 	createNote(){
-		let noteKey = new Date().getTime();
-		let noteValue = this.userNote.value;
+		if (localStorage) {
+		  let noteKey = new Date().getTime();
+		  let noteValue = this.userNote.value;	
+		  localStorage.setItem(noteKey, noteValue);
+		  this.resetnoteTemplate();
+		  this.listNote(noteKey, noteValue);
+		}else{
+		  alert("localStorage Not present");
+		}
 	}
 
-	listNotes(){
-		return `<sdiv class="mdl-cell--4-col-desktop mdl-card__supporting-text mdl-cell--12-col mdl-shadow--2dp mdl-cell--4-col-tablet mdl-card mdl-cell sticky-note">
-		    <div class="message">{$note}</div>
-		    <div class="date">Created on Apr 25</div>
-		    <button class="delete mdl-button mdl-js-button mdl-js-ripple-effect" data-upgraded=",MaterialButton,MaterialRipple">Delete
+	listNote(key, value){
+		let note = `<div class="mdl-cell--4-col-desktop mdl-card__supporting-text mdl-cell--12-col mdl-shadow--2dp mdl-cell--4-col-tablet mdl-card mdl-cell sticky-note">
+		    <div class="message">${value}</div>
+		    <div class="date">Created on ${this.date}</div>
+		    <button id=note-${key} class="delete mdl-button mdl-js-button mdl-js-ripple-effect" data-upgraded=",MaterialButton,MaterialRipple">Delete
 			    <span class="mdl-button__ripple-container">
 				    <span class="mdl-ripple">
 				    </span>
 			    </span>
 		    </button>
-		    </sticky-note>`
+		    </div>`
+		    this.allnotes.innerHTML += note;
+		    document.querySelector(`#note-${key}`).addEventListener("click", this.deleteNote);
 	}
 
 	deleteNote(){
+     localStorage.removeItem(this.id);
+     this.parentNode.remove();
+	}
 
+	//Clear text area after creating the note
+	resetnoteTemplate(){
+	 this.userNote.value = "";
 	}
 
 }
