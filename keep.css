@@ -1,57 +1,79 @@
-body {
-  background-color: #e8e8e8;
-  padding: 16px;
+/**
+ * Copyright 2015 Google Inc. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+html, body {
+  font-family: 'Roboto', 'Helvetica', sans-serif;
 }
-.notes {
-  margin: 0 auto;
+.mdl-grid {
+  max-width: 1024px;
+  margin: 20px auto;
 }
-.note {
-  width: 100%;
-  padding: 8px;
-  box-sizing: border-box;
+.material-icons {
+  font-size: 36px;
+  top: 5px;
+  position: relative;
 }
-@media screen and (min-width: 560px) {
-  .note {
-    width: 50%;
-  }
-}
-@media screen and (min-width: 816px) {
-  .note {
-    width: 33.3%;
-  }
-}
-@media screen and (min-width: 1072px) {
-  .note {
-    width: 25%;
-  }
-}
-.note-inner {
-  background-color: #fff;
-  min-height: 4em;
-  border-radius: 2px;
-  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
-  transition: box-shadow 0.2s;
-}
-.note:hover .note-inner {
-  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.3);
-}
-.big-add {
-  background-color: #F44336;
-  color: #fff;
+.mdl-layout__header-row {
   padding: 0;
-  border-radius: 50%;
-  position: fixed;
-  bottom: 16px;
-  right: 16px;
-  border: none;
-  box-shadow: none;
-  width: 56px;
-  height: 56px;
-  padding: 16px;
-  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
-  cursor: pointer;
+  margin: 0;
 }
-.big-add i {
-  font-size: 24px;
-  line-height: 24px;
+#save {
+  width: 100%;
+}
+#notes-container {
+  padding: 0;
+  width: 100%;
+}
+.mdl-card {
+  min-height: 0;
+}
+.message {
+  font-size: 28px;
+  line-height: 32px;
+  font-weight: 200;
+  padding-bottom: 30px;
+}
+.delete {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  color: #BBB;
+  font-size: 10px;
+  height: 25px;
+  line-height: 25px;
+}
+.delete:HOVER {
+  color: inherit;
+}
+.date {
+  position: absolute;
+  padding: 5px 15px;
+  bottom: 0;
+  left: 0;
+  font-style: italic;
+  font-size: 12px;
+  color: #BBB;
+}
+#notes-section-title {
+  margin-top: 20px;
+}
+.mdl-card__supporting-text {
+  background: linear-gradient(white, #f9f9f9);
+}
+.sticky-note {
+  background: linear-gradient(#FFF93A, #FFFC9E);
+  min-height:250px;
 }
