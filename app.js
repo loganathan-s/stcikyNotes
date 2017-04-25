@@ -7,11 +7,13 @@ class StickyNoteApp extends StickyNote{
 
 	init(){
 	 super.init();
+	 //localStorage.clear();	
 	}
 
 }
 
 window.addEventListener('load', function() {
+
  const noteApp = new StickyNote();
  noteApp.init();
 });

@@ -77,3 +77,8 @@ html, body {
   background: linear-gradient(#FFF93A, #FFFC9E);
   min-height:250px;
 }
+
+.mdl-cell--4-col, .mdl-cell--4-col-tablet.mdl-cell--4-col-tablet {
+    width: calc(50% - 16px);
+}
+
