@@ -4,13 +4,14 @@ class StickyNote {
 	//  the note object with required properties and settings
 	//
 	constructor(){
-		this.noteContainer = document.querySelector("#newNote");
+		this.noteContainer = document.querySelector("#notes-container");
 		this.allnotes = document.querySelector("#notes-section-title");
 		this.newNoteClassList = ["mdl-card", "mdl-shadow--2dp", "mdl-cell"];
 
 		//Attach Class and add element to window
-		this.noteContainer.classList.add(...this.newNoteClassList) //Spread method
+		//this.noteContainer.classList.add(...this.newNoteClassList) //Spread method
 		this.allnotes.classList.add(...this.newNoteClassList) //Spread method
+		this.noteContainer.insertAdjacentHTML('afterbegin',  this.constructor.noteCountTemplate());
 		this.noteContainer.insertAdjacentHTML('afterbegin',  this.constructor.newNoteTemplate());
 		this.userNote = document.querySelector("#userNote");
 		this.saveButton = document.querySelector("#saveNote");
@@ -24,7 +25,7 @@ class StickyNote {
 		this.userNote.addEventListener('keyup', this.toggleSaveButton.bind(this), true);
 		this.saveButton.addEventListener("click", this.createNote.bind(this), true);
 		this.displayAllNotes();
-
+		this.totalNotes();
 	}
 
 	//
@@ -49,6 +50,7 @@ class StickyNote {
 		  localStorage.setItem(noteKey, noteValue);
 		  this.resetnoteTemplate();
 		  this.listNotes(noteKey, noteValue);
+		  this.totalNotes();
 		}else{
 		  alert("localStorage Not present");
 		}
@@ -59,16 +61,19 @@ class StickyNote {
 	//
 	listNotes(key, value){
 		    this.allnotes.insertAdjacentHTML('beforeend', this.constructor.userNoteTemplate(key, value))
-		   document.querySelector(`#note-${key}`).addEventListener("click", this.deleteNote);
+		    this.totalNotes();
+		    document.querySelector(`#note-${key}`).addEventListener("click", this.deleteNote.bind(this));
 	}
 
 	//
 	//delete usernote from local storage and
 	//
-	deleteNote(){;
-	   const noteKey = this.id.match(/\d+/g);
-       localStorage.removeItem(noteKey);
-       this.parentNode.remove();
+	deleteNote(event){
+		let element = event.currentTarget;
+	    const noteKey = element.id.match(/\d+/g);
+        localStorage.removeItem(noteKey);
+        this.totalNotes();
+        element.parentNode.remove();
 	}
 
 	//
@@ -92,12 +97,15 @@ class StickyNote {
 		}
 	}
 
+	totalNotes(){
+		document.querySelector("#totalNotes").textContent = `${localStorage.length} Notes!`;
+	}
 	//
 	//STATIC METHODS. These methods can be invoked only by class names
 	//
 
 	static newNoteTemplate(){
-		return `  <div>
+		return `  <div class="mdl-card mdl-shadow--2dp mdl-cell">
 			        <div class="mdl-card__title mdl-color--blue-grey-200">
 			          <h2 class="mdl-card__title-text">Add new note</h2>
 			        </div>
@@ -111,6 +119,17 @@ class StickyNote {
 			            </button>
 			        </div>
 			      </div>`	
+	}
+
+	static noteCountTemplate(count){
+		return `<div class="mdl-card mdl-shadow--2dp mdl-cell">
+			        <div class="mdl-card__title mdl-color--blue-grey-200">
+			          <h2 class="mdl-card__title-text">Your Total Notes</h2>
+			        </div>
+			        <div class="mdl-card__title " >
+			          <span id="totalNotes"></span>
+			        </div>
+			      </div>`
 	}
 
 	static userNoteTemplate(noteId, note){
