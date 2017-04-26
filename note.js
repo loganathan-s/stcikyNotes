@@ -51,6 +51,7 @@ class StickyNote {
 		  this.resetnoteTemplate();
 		  this.listNotes(noteKey, noteValue);
 		  this.totalNotes();
+		  this.saveButton.setAttribute('disabled', 'true');
 		}else{
 		  alert("localStorage Not present");
 		}
