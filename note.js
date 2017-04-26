@@ -23,6 +23,8 @@ class StickyNote {
 	init(){
 		this.userNote.addEventListener('keyup', this.toggleSaveButton.bind(this), true);
 		this.saveButton.addEventListener("click", this.createNote.bind(this), true);
+		this.displayAllNotes();
+
 	}
 
 	//
@@ -63,9 +65,10 @@ class StickyNote {
 	//
 	//delete usernote from local storage and
 	//
-	deleteNote(){
-     localStorage.removeItem(this.id);
-     this.parentNode.remove();
+	deleteNote(){;
+	   const noteKey = this.id.match(/\d+/g);
+       localStorage.removeItem(noteKey);
+       this.parentNode.remove();
 	}
 
 	//
@@ -73,6 +76,20 @@ class StickyNote {
 	//
 	resetnoteTemplate(){
 	 this.userNote.value = "";
+	}
+
+	//
+	//Display existing notes while loading the page
+	//
+	 displayAllNotes(){
+	 	var self = this;
+		if (localStorage.length > 0){
+		  let notes =  Object.keys(localStorage);
+		  	notes.forEach(function(key) {
+		  		const value = localStorage.getItem(`${key}`)
+		  		self.listNotes(key, value);
+		  	})
+		}
 	}
 
 	//
@@ -112,6 +129,9 @@ class StickyNote {
 	static today() {
 		return (new Date()).toString().split(' ').splice(1,3).join(' ')
 	};
+
+
 }
+
 
 export default StickyNote;

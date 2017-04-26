@@ -1,12 +1,8 @@
-
-const userNote = () => document.querySelector("#userNote");
-const saveButton = () => {
-		let userNote = document.querySelector("#userNote");
-		if (userNote.value){
-			 document.querySelector("#saveNote").removeAttribute('disabled');
-		}else{
-			document.querySelector("#saveNote").setAttribute('disabled', 'true');
-		}
-    
+class utilityFunctionss{
+	constructor(){
+		this.totalNotes = 0;
 	}
-export {saveButton};
+}
+// This Module is just for to excersise the named exporting of functions (arrow functions, anonymous function and normal variables)
+  const totalNotes = () => {
+  }
