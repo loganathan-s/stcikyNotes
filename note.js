@@ -1,10 +1,86 @@
 
 class StickyNote {
-	// Initialize the object property with noteForm
+	//
+	//  the note object with required properties and settings
+	//
 	constructor(){
 		this.noteContainer = document.querySelector("#newNote");
 		this.allnotes = document.querySelector("#notes-section-title");
-		this.noteTemplate = `  <div>
+		this.newNoteClassList = ["mdl-card", "mdl-shadow--2dp", "mdl-cell"];
+
+		//Attach Class and add element to window
+		this.noteContainer.classList.add(...this.newNoteClassList) //Spread method
+		this.allnotes.classList.add(...this.newNoteClassList) //Spread method
+		this.noteContainer.insertAdjacentHTML('afterbegin',  this.constructor.newNoteTemplate());
+		this.userNote = document.querySelector("#userNote");
+		this.saveButton = document.querySelector("#saveNote");
+		//this.date = (new Date()).toString().split(' ').splice(1,3).join(' ');
+	}
+
+	//
+	//Attach EventListener to elements
+	//
+	init(){
+		this.userNote.addEventListener('keyup', this.toggleSaveButton.bind(this), true);
+		this.saveButton.addEventListener("click", this.createNote.bind(this), true);
+	}
+
+	//
+	//Disable or Enable Add button based on user input
+	//
+	toggleSaveButton(){
+		if (this.userNote.value){
+			this.saveButton.removeAttribute('disabled');
+		}else{
+			this.saveButton.setAttribute('disabled', 'true');
+		}
+    
+	}
+
+	//
+	//Store User Note in to LocalStorage
+	//
+	createNote(){
+		if (localStorage) {
+		  let noteKey = new Date().getTime();
+		  let noteValue = this.userNote.value;	
+		  localStorage.setItem(noteKey, noteValue);
+		  this.resetnoteTemplate();
+		  this.listNotes(noteKey, noteValue);
+		}else{
+		  alert("localStorage Not present");
+		}
+	}
+
+	//
+	//Display the User Notes in a list
+	//
+	listNotes(key, value){
+		    this.allnotes.insertAdjacentHTML('beforeend', this.constructor.userNoteTemplate(key, value))
+		   document.querySelector(`#note-${key}`).addEventListener("click", this.deleteNote);
+	}
+
+	//
+	//delete usernote from local storage and
+	//
+	deleteNote(){
+     localStorage.removeItem(this.id);
+     this.parentNode.remove();
+	}
+
+	//
+	//Clear text area after creating the note
+	//
+	resetnoteTemplate(){
+	 this.userNote.value = "";
+	}
+
+	//
+	//STATIC METHODS. These methods can be invoked only by class names
+	//
+
+	static newNoteTemplate(){
+		return `  <div>
 			        <div class="mdl-card__title mdl-color--blue-grey-200">
 			          <h2 class="mdl-card__title-text">Add new note</h2>
 			        </div>
@@ -17,74 +93,25 @@ class StickyNote {
 			              Add
 			            </button>
 			        </div>
-			      </div>
-	 `	
-		this.newNoteClassList = ["mdl-card", "mdl-shadow--2dp", "mdl-cell"];
-
-		//Attach Class and add element to window
-		this.noteContainer.classList.add(...this.newNoteClassList)
-		this.allnotes.classList.add(...this.newNoteClassList)
-		this.noteContainer.insertAdjacentHTML('afterbegin', this.noteTemplate);
-		//this.noteContainer.innerHTML = this.noteTemplate;
-		this.userNote = document.querySelector("#userNote");
-		this.saveButton = document.querySelector("#saveNote");
-		this.date = (new Date()).toString().split(' ').splice(1,3).join(' ');
+			      </div>`	
 	}
 
-	//Initialize elements with listeners
-	init(){
-		this.userNote.addEventListener('keyup', this.toggleSaveButton.bind(this), true);
-		this.saveButton.addEventListener("click", this.createNote.bind(this), true);
-	
-	}
-
-	//Disable or Enable Add button based on user input
-	toggleSaveButton(){
-		if (this.userNote.value){
-			this.saveButton.removeAttribute('disabled');
-		}else{
-			this.saveButton.setAttribute('disabled', 'true');
-		}
-    
-	}
-
-	createNote(){
-		if (localStorage) {
-		  let noteKey = new Date().getTime();
-		  let noteValue = this.userNote.value;	
-		  localStorage.setItem(noteKey, noteValue);
-		  this.resetnoteTemplate();
-		  this.listNote(noteKey, noteValue);
-		}else{
-		  alert("localStorage Not present");
-		}
-	}
-
-	listNote(key, value){
-		let note = `<div class="mdl-cell--4-col-desktop mdl-card__supporting-text mdl-cell--12-col mdl-shadow--2dp mdl-cell--4-col-tablet mdl-card mdl-cell sticky-note">
-		    <div class="message">${value}</div>
-		    <div class="date">Created on ${this.date}</div>
-		    <button id=note-${key} class="delete mdl-button mdl-js-button mdl-js-ripple-effect" data-upgraded=",MaterialButton,MaterialRipple">Delete
+	static userNoteTemplate(noteId, note){
+		return `<div class="mdl-cell--4-col-desktop mdl-card__supporting-text mdl-cell--12-col mdl-shadow--2dp mdl-cell--4-col-tablet mdl-card mdl-cell sticky-note">
+		    <div class="message">${note}</div>
+		    <div class="date">Created on ${this.today()}</div>
+		    <button id=note-${noteId} class="delete mdl-button mdl-js-button mdl-js-ripple-effect" data-upgraded=",MaterialButton,MaterialRipple">Delete
 			    <span class="mdl-button__ripple-container">
 				    <span class="mdl-ripple">
 				    </span>
 			    </span>
 		    </button>
 		    </div>`
-		    this.allnotes.insertAdjacentHTML('beforeend', note)
-		    document.querySelector(`#note-${key}`).addEventListener("click", this.deleteNote);
 	}
 
-	deleteNote(){
-     localStorage.removeItem(this.id);
-     this.parentNode.remove();
-	}
-
-	//Clear text area after creating the note
-	resetnoteTemplate(){
-	 this.userNote.value = "";
-	}
-
+	static today() {
+		return (new Date()).toString().split(' ').splice(1,3).join(' ')
+	};
 }
 
 export default StickyNote;
