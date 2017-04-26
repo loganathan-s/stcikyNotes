@@ -24,7 +24,8 @@ class StickyNote {
 		//Attach Class and add element to window
 		this.noteContainer.classList.add(...this.newNoteClassList)
 		this.allnotes.classList.add(...this.newNoteClassList)
-		this.noteContainer.innerHTML = this.noteTemplate;
+		this.noteContainer.insertAdjacentHTML('afterbegin', this.noteTemplate);
+		//this.noteContainer.innerHTML = this.noteTemplate;
 		this.userNote = document.querySelector("#userNote");
 		this.saveButton = document.querySelector("#saveNote");
 		this.date = (new Date()).toString().split(' ').splice(1,3).join(' ');
@@ -70,7 +71,7 @@ class StickyNote {
 			    </span>
 		    </button>
 		    </div>`
-		    this.allnotes.innerHTML += note;
+		    this.allnotes.insertAdjacentHTML('beforeend', note)
 		    document.querySelector(`#note-${key}`).addEventListener("click", this.deleteNote);
 	}
 

@@ -7,7 +7,6 @@ class StickyNoteApp extends StickyNote{
 
 	init(){
 	 super.init();
-	 //localStorage.clear();	
 	}
 
 }
