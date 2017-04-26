@@ -61,7 +61,7 @@ class StickyNote {
 	//Display the User Notes in a list
 	//
 	listNotes(key, value){
-		    this.allnotes.insertAdjacentHTML('beforeend', this.constructor.userNoteTemplate(key, value))
+		    this.allnotes.insertAdjacentHTML('beforeend', this.constructor.userNoteTemplate(key, value));
 		    this.totalNotes();
 		    document.querySelector(`#note-${key}`).addEventListener("click", this.deleteNote.bind(this));
 	}
@@ -134,16 +134,25 @@ class StickyNote {
 	}
 
 	static userNoteTemplate(noteId, note){
-		return `<div class="mdl-cell--4-col-desktop mdl-card__supporting-text mdl-cell--12-col mdl-shadow--2dp mdl-cell--4-col-tablet mdl-card mdl-cell sticky-note">
-		    <div class="message">${note}</div>
-		    <div class="date">Created on ${this.today()}</div>
-		    <button id=note-${noteId} class="delete mdl-button mdl-js-button mdl-js-ripple-effect" data-upgraded=",MaterialButton,MaterialRipple">Delete
-			    <span class="mdl-button__ripple-container">
-				    <span class="mdl-ripple">
-				    </span>
-			    </span>
-		    </button>
-		    </div>`
+			let noteColor = `#${(Math.random()*0xFFFFFF<<0).toString(16)}`;
+			console.log(noteColor);
+			return `<div class="mdl-card mdl-shadow--2dp mdl-cell">
+			        <div class="mdl-card__title" style="background-color: ${noteColor}">
+			          <h2 class="mdl-card__title-text">${note}</h2>
+			        </div>
+			        <div class="mdl-card__title card-panel">
+			          
+			        </div>
+			        			        <div class="date mdl-cell--4-col-tablet ">Created on ${this.today()}</div>
+
+			        <button id=note-${noteId} class="delete mdl-button mdl-js-button mdl-js-ripple-effect" data-upgraded=",MaterialButton,MaterialRipple">Delete
+					    <span class="mdl-button__ripple-container">
+						    <span class="mdl-ripple">
+						    </span>
+					    </span>
+		    		</button>
+			      </div>`
+
 	}
 
 	static today() {
