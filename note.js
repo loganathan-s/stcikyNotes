@@ -1,11 +1,14 @@
+import News from "./news";
 
-class StickyNote {
+class StickyNote extends News{
 	//
 	//  the note object with required properties and settings
 	//
 	constructor(){
+		super();
 		this.noteContainer = document.querySelector("#notes-container");
 		this.allnotes = document.querySelector("#notes-section-title");
+		this.allnews = document.querySelector("#notes-section-news");
 		this.newNoteClassList = ["mdl-card", "mdl-shadow--2dp", "mdl-cell"];
 
 		//Attach Class and add element to window
@@ -15,6 +18,7 @@ class StickyNote {
 		this.noteContainer.insertAdjacentHTML('afterbegin',  this.constructor.newNoteTemplate());
 		this.userNote = document.querySelector("#userNote");
 		this.saveButton = document.querySelector("#saveNote");
+		
 		//this.date = (new Date()).toString().split(' ').splice(1,3).join(' ');
 	}
 
@@ -26,6 +30,8 @@ class StickyNote {
 		this.saveButton.addEventListener("click", this.createNote.bind(this), true);
 		this.displayAllNotes();
 		this.totalNotes();
+        this.displayNews();
+
 	}
 
 	//
@@ -60,11 +66,18 @@ class StickyNote {
 	//
 	//Display the User Notes in a list
 	//
-	listNotes(key, value){
-		    this.allnotes.insertAdjacentHTML('beforeend', this.constructor.userNoteTemplate(key, value));
-		    this.totalNotes();
-		    document.querySelector(`#note-${key}`).addEventListener("click", this.deleteNote.bind(this));
+	listNotes(key, value, news = false){
+		   if (news !==false) {
+				this.allnotes.insertAdjacentHTML('afterbegin', this.constructor.userNoteTemplate(key, value, "News"));
+			    this.totalNotes();
+			    document.querySelector(`#note-${key}`).addEventListener("click", this.deleteNote.bind(this));
+		   }else{
+			   	this.allnotes.insertAdjacentHTML('beforeend', this.constructor.userNoteTemplate(key, value, "Note"));
+			    document.querySelector(`#note-${key}`).addEventListener("click", this.deleteNote.bind(this));
+		   }
+		    
 	}
+
 
 	//
 	//delete usernote from local storage and
@@ -97,6 +110,24 @@ class StickyNote {
 		  	})
 		}
 	}
+	 //
+	 // Display News
+	 //	
+
+	 displayNews(){
+	 	var self = this;
+	 	super.topNews().then(function(bbcNews) {
+	 		bbcNews.forEach(news => {
+	 			let key = new Date(news.publishedAt);
+	 			let note = `<a target="_blank" href='${news.url}'>${news.description}</a>`
+	 			return self.listNotes(key.getTime(), note, true);
+	 		});
+   		 })
+	 	.catch((err) => {
+   		 	 console.log(err);
+	     });
+	 	
+	 }
 
 	totalNotes(){
 		document.querySelector("#totalNotes").textContent = `${localStorage.length} Notes!`;
@@ -133,9 +164,14 @@ class StickyNote {
 			      </div>`
 	}
 
-	static userNoteTemplate(noteId, note){
+	static userNoteTemplate(noteId, note, stickyType){
 			let noteColor = `#${(Math.random()*0xFFFFFF<<0).toString(16)}`;
-			console.log(noteColor);
+            let deleteButton =  `<button id=note-${noteId} class="delete mdl-button mdl-js-button mdl-js-ripple-effect" data-upgraded=",MaterialButton,MaterialRipple">Delete
+                                <span class="mdl-button__ripple-container">
+                                    <span class="mdl-ripple">
+                                    </span>
+                                </span>
+                            </button>`
 			return `<div class="mdl-card mdl-shadow--2dp mdl-cell">
 			        <div class="mdl-card__title" style="background-color: ${noteColor}">
 			          <h2 class="mdl-card__title-text">${note}</h2>
@@ -143,14 +179,8 @@ class StickyNote {
 			        <div class="mdl-card__title card-panel">
 			          
 			        </div>
-			        			        <div class="date mdl-cell--4-col-tablet ">Created on ${this.today()}</div>
-
-			        <button id=note-${noteId} class="delete mdl-button mdl-js-button mdl-js-ripple-effect" data-upgraded=",MaterialButton,MaterialRipple">Delete
-					    <span class="mdl-button__ripple-container">
-						    <span class="mdl-ripple">
-						    </span>
-					    </span>
-		    		</button>
+			        	<div class="date mdl-cell--2-col-tablet "><b>${stickyType}</b> Created on ${this.today()}</div>
+				        ${stickyType === 'Note' ? deleteButton : ''}
 			      </div>`
 
 	}
