@@ -4,7 +4,9 @@
   "description": "This is a simple ES6 App",
   "main": "app.js",
   "scripts": {
-    "build": "webpack --progress --watch"
+    "build": "webpack --progress --watch",
+    "start" : "browser-sync start --server --files '*.css, *.html, *.js'"
+
   },
   "repository": {
     "type": "git",

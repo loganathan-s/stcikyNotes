@@ -66,13 +66,11 @@ class StickyNote extends News{
 	//
 	//Display the User Notes in a list
 	//
-	listNotes(key, value, news = false){
-		   if (news) {
-				this.allnews.insertAdjacentHTML('afterbegin', this.constructor.userNoteTemplate(key, value, "News"));
-
-			    //document.querySelector(`#note-${key}`).addEventListener("click", this.deleteNote.bind(this));
+	listNotes(key, value, newsPublishedAt = false){
+		   if (newsPublishedAt) {
+				this.allnews.insertAdjacentHTML('afterbegin', this.constructor.userNoteTemplate(key, value, newsPublishedAt));
 		   }else{
-			   	this.allnotes.insertAdjacentHTML('beforeend', this.constructor.userNoteTemplate(key, value, "Note"));
+			   	this.allnotes.insertAdjacentHTML('beforeend', this.constructor.userNoteTemplate(key, value));
 			    document.querySelector(`#note-${key}`).addEventListener("click", this.deleteNote.bind(this));
 		   }
           this.totalNotes();
@@ -115,13 +113,15 @@ class StickyNote extends News{
 	 // Display News
 	 //	
 
-	 displayNews(){
+	displayNews(){
 	 	var self = this;
 	 	super.topNews().then(function(bbcNews) {
+	 		console.table(bbcNews);
 	 		bbcNews.forEach(news => {
-	 			let key = new Date(news.publishedAt);
+	 			let date = news.publishedAt ? news.publishedAt : new Date()
+	 			let key = new Date(date);
 	 			let note = `<a target="_blank" href='${news.url}'>${news.description}</a>`
-	 			return self.listNotes(key.getTime(), note, true);
+	 			return self.listNotes(key.getTime(), note, date);
 	 		});
    		 })
 	 	.catch((err) => {
@@ -129,6 +129,7 @@ class StickyNote extends News{
 	     });
 	 	
 	 }
+
 
 	totalNotes(){
 		document.querySelector("#totalNotes").textContent = `${localStorage.length} Notes!`;
@@ -165,30 +166,33 @@ class StickyNote extends News{
 			      </div>`
 	}
 
-    static userNoteTemplate(noteId, note, stickyType){
+    static userNoteTemplate(noteId, note, date = false){
         let noteColor = `#${(Math.random()*0xFFFFFF<<0).toString(16)}`;
-        let deleteButton =  `<div class="date mdl-cell--2-col-tablet "><b>${stickyType}</b> Created on ${this.today()}</div><button id=note-${noteId} class="delete mdl-button mdl-js-button mdl-js-ripple-effect" data-upgraded=",MaterialButton,MaterialRipple">Delete
+
+        let deleteButton =  `<button id=note-${noteId} class="delete mdl-button mdl-js-button mdl-js-ripple-effect" data-upgraded=",MaterialButton,MaterialRipple">Delete
             <span class="mdl-button__ripple-container">
                 <span class="mdl-ripple">
                 </span>
             </span>
         </button>`
-                return `<div class="mdl-card mdl-shadow--2dp mdl-cell">
+                return `
+                <div class="mdl-card mdl-shadow--2dp mdl-cell">
             <div class="mdl-card__title" style="background-color: ${noteColor}">
                 <h2 class="mdl-card__title-text">${note}</h2>
             </div>
             <div class="mdl-card__title card-panel">
-
-            </div>
-
-        ${stickyType === 'Note' ? deleteButton : ''}
+            </div><div class="date mdl-cell--2-col-tablet ">
+                <b>${!date ? 'Created on' : 'Published Date'}</b> 
+                ${this.createdPublishedDates(date)}
+                </div>
+        ${date ? '' : deleteButton}
         </div>`
 
     }
 
 
-static today() {
-		return (new Date()).toString().split(' ').splice(1,3).join(' ')
+static createdPublishedDates(date = false) {
+	   return (date ? new Date() : new Date(date)).toString().split(' ').splice(1,3).join(' ');
 	};
 
 
