@@ -68,11 +68,11 @@ class StickyNote extends News{
 	//
 	listNotes(key, value, news = false){
 		   if (news) {
-				this.allnews.insertAdjacentHTML('afterbegin', this.constructor.userNoteTemplate(key, value, news));
+				this.allnews.insertAdjacentHTML('afterbegin', this.constructor.userNoteTemplate(key, value, "News"));
 
 			    //document.querySelector(`#note-${key}`).addEventListener("click", this.deleteNote.bind(this));
 		   }else{
-			   	this.allnotes.insertAdjacentHTML('beforeend', this.constructor.userNoteTemplate(key, value));
+			   	this.allnotes.insertAdjacentHTML('beforeend', this.constructor.userNoteTemplate(key, value, "Note"));
 			    document.querySelector(`#note-${key}`).addEventListener("click", this.deleteNote.bind(this));
 		   }
           this.totalNotes();
@@ -119,10 +119,9 @@ class StickyNote extends News{
 	 	var self = this;
 	 	super.topNews().then(function(bbcNews) {
 	 		bbcNews.forEach(news => {
-	 			const key = new Date(news.publishedAt);
-	 			const note = `<a target="_blank" href='${news.url}'>${news.description}</a>`
-				const date = news.publishedAt
- 	 			return self.listNotes(key.getTime(), note, date);
+	 			let key = new Date(news.publishedAt);
+	 			let note = `<a target="_blank" href='${news.url}'>${news.description}</a>`
+	 			return self.listNotes(key.getTime(), note, true);
 	 		});
    		 })
 	 	.catch((err) => {
@@ -166,31 +165,30 @@ class StickyNote extends News{
 			      </div>`
 	}
 
-    static userNoteTemplate(noteId, note, newsDate = false){
+    static userNoteTemplate(noteId, note, stickyType){
         let noteColor = `#${(Math.random()*0xFFFFFF<<0).toString(16)}`;
-        let deleteButton =  `<button id=note-${noteId} class="delete mdl-button mdl-js-button mdl-js-ripple-effect" data-upgraded=",MaterialButton,MaterialRipple">Delete
+        let deleteButton =  `<div class="date mdl-cell--2-col-tablet "><b>${stickyType}</b> Created on ${this.today()}</div><button id=note-${noteId} class="delete mdl-button mdl-js-button mdl-js-ripple-effect" data-upgraded=",MaterialButton,MaterialRipple">Delete
             <span class="mdl-button__ripple-container">
                 <span class="mdl-ripple">
                 </span>
             </span>
         </button>`
-
-        return `<div class="mdl-card mdl-shadow--2dp mdl-cell">
+                return `<div class="mdl-card mdl-shadow--2dp mdl-cell">
             <div class="mdl-card__title" style="background-color: ${noteColor}">
                 <h2 class="mdl-card__title-text">${note}</h2>
             </div>
             <div class="mdl-card__title card-panel">
-		    </div>
-		    <div class="date mdl-cell--2-col-tablet ">${!newsDate ? 'Created on ': 'Published At'} ${this.createdAt(newsDate)}</div>
-		    ${!newsDate ? deleteButton : ''}
+
+            </div>
+
+        ${stickyType === 'Note' ? deleteButton : ''}
         </div>`
+
     }
 
 
-    static createdAt(date = false) {
-    	console.info(date);
-    	let day = !date ? (new Date()) : new Date(date) 
-    	return day.toString().split(' ').splice(1,3).join(' ');
+static today() {
+		return (new Date()).toString().split(' ').splice(1,3).join(' ')
 	};
 
 
