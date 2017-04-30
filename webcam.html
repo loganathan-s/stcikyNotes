@@ -7,14 +7,19 @@
 <body>
 
   <div class="photobooth">
-    <canvas class="photo"></canvas>
+    <canvas class="photo">
+    </canvas>
     <video class="player"></video>
+      <button id="takePhoto"> Take Photo</button>
     <div class="strip"></div>
   </div>
+    
 
   <!-- Audio to play whne you execute takePhotoFunction -->
   <audio class="snap" src="cameraClick.mp3" hidden></audio>
   <script src="./webcam.js"></script>
+  <link rel="stylesheet" href="./webcam.css">
 
 </body>
+
 </html>
