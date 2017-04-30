@@ -1,10 +1,6 @@
 import StickyNote from './note';
 
 class StickyNoteApp extends StickyNote{
-	constructor(){
-	  super();	
-	}
-
 	init(){
 	 super.init();
 	}
@@ -12,7 +8,6 @@ class StickyNoteApp extends StickyNote{
 }
 
 window.addEventListener('load', function() {
-
  const noteApp = new StickyNote();
  noteApp.init();
 });

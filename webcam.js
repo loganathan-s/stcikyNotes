@@ -1,13 +1,14 @@
 class Webcam {
 
 	constructor(){
-	
 		this.video = document.querySelector('.player');
 		this.canvas = document.querySelector('.photo');
 		this.canvasContext = this.canvas.getContext("2d");
 		this.strip = document.querySelector('.strip');
 		this.snap = document.querySelector('.snap');
 		this.photoButton = document.querySelector('#takePhoto');
+
+		//Attach Event Listeners
 		this.video.addEventListener("canplay", this.videoToCanvas.bind(this));
 		this.photoButton.addEventListener("click", this.takePhoto.bind(this));	
 	}
@@ -17,8 +18,6 @@ class Webcam {
 		.then(browserVideoStream => {
 			this.video.src = window.URL.createObjectURL(browserVideoStream);
 			return this.video.play();
-		}).then(videoStream => {
-			//return this.videoToCanvas();
 		})
 		.catch(err => alert(err));
 	}
@@ -44,9 +43,11 @@ class Webcam {
 	    this.strip.insertBefore(imageLink, this.strip.firstChild);
    }
 
+   static start(){
+	this.constructor.captureVideo();  	
+   }
+
 }
 
-video = new Webcam();
-video.captureVideo();
-
+export default Webcam;
 
