@@ -1,4 +1,5 @@
 import News from "./news";
+import Webcam from "./webcam";
 
 class StickyNote extends News{
 	//
@@ -26,8 +27,9 @@ class StickyNote extends News{
 	//Attach EventListener to elements
 	//
 	init(){
-		this.userNote.addEventListener('keyup', this.toggleSaveButton.bind(this), true);
-		this.saveButton.addEventListener("click", this.createNote.bind(this), true);
+		this.userNote.addEventListener('keyup', this.toggleSaveButton.bind(this));
+		this.saveButton.addEventListener("click", this.createNote.bind(this));
+		document.querySelector("#PhotoBoothLink").addEventListener("click", this.startWebcam.bind(this));
 		this.displayAllNotes();
 		this.totalNotes();
         this.displayNews();
@@ -125,7 +127,7 @@ class StickyNote extends News{
 	 		});
    		 })
 	 	.catch((err) => {
-   		 	 console.log(err);
+   		 	 return err
 	     });
 	 	
 	 }
@@ -190,9 +192,22 @@ class StickyNote extends News{
 
     }
 
+    startWebcam(e){
+      document.querySelector(".strip").scrollIntoView();
+      document.querySelector("#takePhoto").classList.remove("displayNone");
+   	  const webcam = new Webcam();
+      webcam.captureVideo();
+    }
+
 
 static createdPublishedDates(date = false) {
-	   return (date ? new Date() : new Date(date)).toString().split(' ').splice(1,3).join(' ');
+	   if (date){
+	   	 return new Date(date).toString().split(' ').splice(1,3).join(' ');
+		}	
+	   else{
+	   	return new Date().toString().split(' ').splice(1,3).join(' ')
+	   }
+	   	
 	};
 
 
