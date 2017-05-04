@@ -11,3 +11,8 @@ This application is also deployed to heroku.
 
 Applciation URL: https://stark-island-29993.herokuapp.com/
 
+
+NOTE:
+
+You need to run server, when you want to truy Photo feature. browser will support Webcam only when it backed up with some server. You can user browser sync
+
