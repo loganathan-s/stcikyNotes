@@ -184,7 +184,7 @@ class StickyNote extends News{
             </div>
             <div class="mdl-card__title card-panel">
             </div><div class="date mdl-cell--2-col-tablet ">
-                <b>${!date ? '' : 'Published Date'}</b> 
+                <b>${!date ? 'Created At' : 'Published Date'}</b> 
                 ${this.createdPublishedDates(date)}
                 </div>
         ${date ? '' : deleteButton}
@@ -205,7 +205,7 @@ static createdPublishedDates(date = false) {
 	   	 return new Date(date).toString().split(' ').splice(1,3).join(' ');
 		}	
 	   else{
-	   	return "";//new Date().toString().split(' ').splice(1,3).join(' ') TEMPORARILY COMMENTED OUT DUE TO ISSUE WITH HEROKU SERVER
+	   	return new Date().toString().split(' ').splice(1,3).join(' ');
 	   }
 	   	
 	};
